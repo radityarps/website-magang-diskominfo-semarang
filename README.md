@@ -131,7 +131,7 @@ php artisan serve
 
 **Default Admin Login:**
 
--   Email: `admin@kominfo.go.id`
+-   Email: `admin@gmail.com`
 -   Password: `password`
 
 ## ⚙️ **Installation**
