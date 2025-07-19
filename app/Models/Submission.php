@@ -10,8 +10,6 @@ class Submission extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
         'status',
         'is_valid',
         'report_date',

@@ -1,82 +1,125 @@
- <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+@php
+    $menus = [
+        1 => [
+            (object) ['title' => 'Dashboard', 'path' => 'dashboard'],
+            (object) ['title' => 'Daftar Anak Magang', 'path' => 'account-list'],
+            (object) ['title' => 'Permintaan Akun', 'path' => 'account-request'],
+            (object) ['title' => 'Semua Tugas', 'path' => 'admin/all-submissions'],
+        ],
+        2 => [
+            (object) ['title' => 'Dashboard', 'path' => 'dashboard'],
+            (object) ['title' => 'Pengumpulan Tugas', 'path' => 'submission'],
+        ],
+    ];
+@endphp
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+<style>
+    .navbar-transparent {
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
 
-                    
+    .navbar-transparent .navbar-brand {
+        font-weight: 700;
+        color: #ffffff !important;
+        font-size: 1.5rem;
+    }
 
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
+    .navbar-transparent .nav-link {
+        color: #eaeaea !important;
+        margin-right: 1rem;
+        transition: 0.2s ease;
+    }
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
+    .navbar-transparent .nav-link.active,
+    .navbar-transparent .nav-link:hover {
+        color: #ff805d !important;
+    }
+
+    .navbar-transparent .btn-cta {
+        background-color: #ff805d;
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 8px 18px;
+        border-radius: 25px;
+        transition: 0.3s ease;
+        text-decoration: none;
+    }
+
+    .navbar-transparent .btn-cta:hover {
+        background-color: #ff6742;
+        color: white;
+    }
+
+    .navbar-transparent .profile-img {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-left: 8px;
+    }
+
+    .dropdown-menu {
+        background-color: #222;
+        border: none;
+    }
+
+    .dropdown-item {
+        color: #eee;
+    }
+
+    .dropdown-item:hover {
+        background-color: #333;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-transparent fixed-top">
+    <div class="container-fluid">
+        <!-- Logo / Brand -->
+        <a class="navbar-brand" href="/">KominfoMuda</a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+            aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Main Menu -->
+        <div class="collapse navbar-collapse" id="navbarMain">
+            @auth
+                <!-- Left Nav -->
+                <ul class="navbar-nav mx-auto">
+                    @foreach ($menus[auth()->user()->role_id] as $menu)
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is($menu->path . '*') ? 'active' : '' }}"
+                                href="/{{ $menu->path }}">
+                                {{ $menu->title }}
                             </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
                         </li>
+                    @endforeach
+                </ul>
 
-                       
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        @auth
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-900 fs-5 fw-bold">
-                                    {{ auth()->user()->name }}
-                                </span>
-                                <img class="img-profile rounded-circle"
-                                    src="{{ auth()->user()->profile_picture ? url('/img/profile/' . basename(auth()->user()->profile_picture)) : asset('template/img/default-profile.png') }}">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="/profile">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profil
-                                </a>
-                                <a class="dropdown-item" href="/change-password">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Ubah Password
-                                </a>
-                                <!-- <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a> -->
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
-                        @endauth
-
-                    </ul>
-
-                </nav>
+                <!-- Right: CTA + User -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="me-2 fw-semibold text-white">{{ auth()->user()->name }}</span>
+                            <img class="profile-img"
+                                src="{{ auth()->user()->profile_picture ? url('/img/profile/' . basename(auth()->user()->profile_picture)) : asset('template/img/default-profile.png') }}">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i> Profil</a></li>
+                            <li><a class="dropdown-item" href="/change-password"><i class="fas fa-cogs me-2"></i> Ubah Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            @endauth
+        </div>
+    </div>
+</nav>

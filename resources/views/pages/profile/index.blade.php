@@ -2,15 +2,28 @@
 
 @section('content')
 <div class="container mt-5">
-        @if (session('success'))
-            <script>
-                Swal.fire({
-                    title: "Berhasil",
-                    text: "{{ session()->get('success') }}",
-                    icon: "success"
-                });
-            </script>
-        @endif
+@if (session('success'))
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            iconColor: '#10b981',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#1e1e2f',
+            color: '#f9fafb',
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session()->get('success') }}'
+        });
+    </script>
+@endif
     <div class="row justify-content-center">
         <div class="col-md-8">
 

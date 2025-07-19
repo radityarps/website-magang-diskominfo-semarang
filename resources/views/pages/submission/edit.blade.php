@@ -2,15 +2,28 @@
 
 @section('content')
 <div class="container">
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                title: "Terjadi kesalahan",
-                text: "@foreach ($errors->all() as $error) {{ $error }} {{ $loop->last ? '' : ', ' }} @endforeach",
-                icon: "error"
-            });
-        </script>
-    @endif
+@if (session('success'))
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            iconColor: '#10b981',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#1e1e2f',
+            color: '#f9fafb',
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session()->get('success') }}'
+        });
+    </script>
+@endif
 
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -22,19 +35,6 @@
                     <form action="{{ route('submission.update', $submission->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Judul Tugas</label>
-                            <input type="text" class="form-control" 
-                                   id="title" name="title" value="{{ old('title', $submission->title) }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Deskripsi Tugas</label>
-                            <textarea class="form-control" 
-                                      id="content" name="content" rows="4" required>{{ old('content', $submission->content) }}</textarea>
-                        </div>
-
                         <div class="mb-3">
                             <label class="form-label">Foto Tugas Saat Ini</label>
                             <div class="d-flex gap-2 mb-2 flex-wrap">

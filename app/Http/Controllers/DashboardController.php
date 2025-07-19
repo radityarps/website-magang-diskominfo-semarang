@@ -20,17 +20,27 @@ class DashboardController extends Controller
 
             $today = now()->format('Y-m-d');
             
-            $sudahMengumpulkan = Submission::whereDate('report_date', $today)
-                                        ->distinct('user_id')
-                                        ->count('user_id');
-            
-            $belumMengumpulkan = $totalMahasiswa - $sudahMengumpulkan;
+            $mahasiswaIds = User::where('role_id', 2)
+                ->where('status', 'approved')
+                ->pluck('id');
 
-            $statistikMingguan = Submission::select(DB::raw('DATE(report_date) as tanggal'), DB::raw('COUNT(DISTINCT user_id) as jumlah'))
-                                        ->where('report_date', '>=', now()->subDays(7))
-                                        ->groupBy('tanggal')
-                                        ->orderBy('tanggal')
-                                        ->get();
+            $sudahMengumpulkan = Submission::whereDate('report_date', $today)
+                ->whereIn('user_id', $mahasiswaIds)
+                ->distinct('user_id')
+                ->count('user_id');
+            
+            $belumMengumpulkan = max(0, $totalMahasiswa - $sudahMengumpulkan);
+
+            $statistikMingguan = Submission::select(
+                            DB::raw('DATE(report_date) as tanggal'),
+                            DB::raw('COUNT(DISTINCT user_id) as jumlah')
+                        )
+                        ->where('report_date', '>=', now()->subDays(6)->startOfDay()) // 7 hari terakhir termasuk hari ini
+                        ->where('is_valid', true) // hanya submission valid (foto >= 3)
+                        ->groupBy(DB::raw('DATE(report_date)'))
+                        ->orderBy('tanggal')
+                        ->get();
+
 
             return view('pages.dashboard', compact(
                 'totalMahasiswa',

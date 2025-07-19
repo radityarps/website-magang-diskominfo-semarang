@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('university');
             $table->string('field_of_study');
             $table->string('bidang'); // ✅ Tambahan: Bidang minat magang
-            $table->binary('profile_picture')->nullable(); // untuk gambar
+            $table->string('profile_picture')->nullable(); // untuk gambar
             $table->binary('surat_validasi')->nullable(); // untuk surat
             $table->date('tanggal_mulai')->nullable(); // ✅ Tambahan: Tanggal mulai magang
             $table->date('tanggal_selesai')->nullable(); // ✅ Tambahan: Tanggal selesai magang

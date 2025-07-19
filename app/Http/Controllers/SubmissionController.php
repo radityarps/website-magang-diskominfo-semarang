@@ -47,16 +47,12 @@ class SubmissionController extends Controller
         }
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
             'photos.*' => 'required|image|mimes:jpeg,png,jpg|max:2048', // max 2MB per photo
             'photos' => 'required|array|min:3|max:5'
         ]);
 
         // Create submission
         $submission = Submission::create([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
             'status' => 'new',
             'is_valid' => false,
             'report_date' => Carbon::now(),
@@ -142,15 +138,11 @@ class SubmissionController extends Controller
         }
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048', // max 2MB per photo
             'photos' => 'array|max:5'
         ]);
 
         $submission->update([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
         ]);
 
         $uploadedCount = $submission->images()->count();
@@ -266,7 +258,6 @@ class SubmissionController extends Controller
                 'Email' => $user->email,
                 'Universitas' => $user->university,
                 'Status Pengumpulan' => $hasSubmitted ? 'Sudah Mengumpulkan' : 'Belum Mengumpulkan',
-                'Judul Tugas' => $hasSubmitted ? $submission->title : '-',
             ];
 
             // Pisahkan data berdasarkan status pengumpulan

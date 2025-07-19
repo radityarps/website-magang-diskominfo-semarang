@@ -7,7 +7,11 @@ use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", [AuthController::class,'login'])->name('login');
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get("/login", [AuthController::class,'login'])->name('login');
 Route::get("/new-account", [AuthController::class,'registerView']);
 Route::post("/login", [AuthController::class,'authenticate']);
 Route::post("/logout", [AuthController::class,'logout']);
@@ -45,6 +49,11 @@ Route::delete('/anak_magangs/{id}', [AnakMagangController::class, 'destroy'])
 Route::get('/account-list',[UserController::class,'account_list_view'])->middleware('role:admin');
 Route::put('/account/{id}', [UserController::class, 'update'])->name('account.update')->middleware('role:admin');
 Route::delete('/account/{id}', [UserController::class, 'destroy'])->name('account.destroy')->middleware('role:admin');
+Route::get('/account/{id}/edit', [UserController::class, 'edit'])->name('account.edit')->middleware('role:admin');
+Route::get('/account-list', [UserController::class, 'account_list_view'])
+    ->name('account-list.index');
+
+
 
 //Admin - Permintaan Akun
 Route::get('/account-request', [UserController::class,'account_request_view'])->middleware('role:admin');

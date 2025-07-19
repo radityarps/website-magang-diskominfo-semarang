@@ -16,8 +16,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table -> string('title');
-            $table -> text('content');
             $table->enum('status', ['new','processing','completed']) -> default('new');
             $table->timestamp('report_date') ->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->boolean('is_valid')->default(false);

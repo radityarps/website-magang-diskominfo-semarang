@@ -52,7 +52,6 @@
                 <th>Email</th>
                 <th>Universitas</th>
                 <th>Status Pengumpulan</th>
-                <th>Judul Tugas</th>
             </tr>
         </thead>
         <tbody>
@@ -65,7 +64,6 @@
                     <td class="{{ $submission['Status Pengumpulan'] === 'Sudah Mengumpulkan' ? 'status-submitted' : 'status-not-submitted' }}">
                         {{ $submission['Status Pengumpulan'] }}
                     </td>
-                    <td>{{ $submission['Judul Tugas'] }}</td>
                 </tr>
             @endforeach
         </tbody>

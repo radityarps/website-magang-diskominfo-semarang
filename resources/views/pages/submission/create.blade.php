@@ -2,37 +2,38 @@
 
 @section('content')
 <div class="container">
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                title: "Terjadi kesalahan",
-                text: "@foreach ($errors->all() as $error) {{ $error }} {{ $loop->last ? '' : ', ' }} @endforeach",
-                icon: "error"
-            });
-        </script>
-    @endif
+@if (session('success'))
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            iconColor: '#10b981',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#1e1e2f',
+            color: '#f9fafb',
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session()->get('success') }}'
+        });
+    </script>
+@endif
 
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="mb-0">Buat Tugas Baru</h4>
+                    <h4 class="mb-0">Kirimkan Screenshots</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('submission.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Judul Tugas</label>
-                            <input type="text" class="form-control" 
-                                   id="title" name="title" value="{{ old('title') }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="content" class="form-label">Deskripsi Tugas</label>
-                            <textarea class="form-control" 
-                                      id="content" name="content" rows="4" required>{{ old('content') }}</textarea>
-                        </div>
-
                         <div class="mb-3">
                             <label for="photos" class="form-label">Foto Tugas (Minimal 3, Maksimal 5)</label>
                             <input type="file" class="form-control" 
@@ -42,7 +43,7 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('submission.index') }}" class="btn btn-secondary">Kembali</a>
-                            <button type="submit" class="btn btn-primary">Buat Tugas</button>
+                            <button type="submit" class="btn btn-primary">Kirim Tugas</button>
                         </div>
                     </form>
                 </div>

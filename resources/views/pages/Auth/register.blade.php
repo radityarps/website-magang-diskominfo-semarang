@@ -119,15 +119,28 @@
     @foreach ($errors->all() as $error)
         <p>{{ $error }}</p>
     @endforeach
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                title: "Terjadi kesalahan",
-                text: "@foreach ($errors->all() as $error ) {{ $error }} {{ $loop ->last ? '.' : ',' }} @endforeach",
-                icon: "error"
-            });
-        </script>
-    @endif
+@if (session('success'))
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            iconColor: '#10b981',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#1e1e2f',
+            color: '#f9fafb',
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session()->get('success') }}'
+        });
+    </script>
+@endif
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ asset('template/vendor/jquery/jquery.min.js') }}"></script>

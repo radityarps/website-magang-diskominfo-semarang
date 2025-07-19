@@ -1,36 +1,68 @@
-@foreach ($users as $item)
-    <tr>
-        <td>{{ $loop->iteration }}</td>
-        <td>{{ $item->name }}</td>
-        <td>{{ $item->email }}</td>
-        <td>{{ $item->university ?? '-' }}</td>
-        <td>{{ $item->field_of_study ?? '-' }}</td>
-        <td>{{ $item->bidang ?? '-' }}</td>
-        <td class="text-center">
-            @if ($item->profile_picture)
-                <img src="{{ url('/img/profile/' . basename($item->profile_picture)) }}" width="80" height="80" class="rounded-circle" style="object-fit: cover;">
-            @else
-                <img src="{{ asset('template/img/default-profile.png') }}" width="80" height="80" class="rounded-circle" style="object-fit: cover;">
-            @endif
-        </td>
-        <td class="text-center">
-            @if($item->status == 'approved')
-                <span class="badge badge-success">Aktif</span>
-            @else
-                <span class="badge badge-danger">Tidak Aktif</span>
-            @endif
-        </td>
-        <td class="text-center">
-            <div class="d-flex justify-content-center" style="gap: 5px;">
-                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
-                    <i class="fas fa-trash"></i>
-                </button>
+@foreach ($users as $index => $user)
+<tr>
+    <td>{{ $index + 1 }}</td>
+    <td>{{ $user->name }}</td>
+    <td>{{ $user->email }}</td>
+    <td>{{ $user->universitas }}</td>
+    <td>{{ $user->jurusan }}</td>
+    <td>{{ $user->bidang }}</td>
+    <td>
+        @if($user->profile_picture)
+            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Foto" class="rounded-circle" width="35" height="35">
+        @else
+            <span class="text-muted">-</span>
+        @endif
+    </td>
+    <td>
+        @if($user->status == 'aktif')
+            <span class="badge bg-success">Aktif</span>
+        @else
+            <span class="badge bg-secondary">Nonaktif</span>
+        @endif
+    </td>
+    <td>
+        <a href="{{ route('account.edit', $user->id) }}" class="btn btn-outline-info me-1" title="Edit">
+            <i class="fas fa-edit"></i>
+        </a>
+        <form action="{{ route('account.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus akun ini?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-outline-danger" title="Hapus">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </form>
+    </td>
+</tr>
+
+<!-- Progress Foto Bar (sub-row) -->
+<tr>
+    <td colspan="9" class="pt-0 pb-4">
+        @php
+            $totalFoto = $user->jumlah_foto ?? 0;
+            $maxFoto = 90;
+            $persen = min(100, round(($totalFoto / $maxFoto) * 100));
+        @endphp
+        <div class="px-3">
+            <div class="progress" style="height: 8px; background-color: #444;">
+                <div class="progress-bar bg-info" role="progressbar"
+                    style="width: {{ $persen }}%;" aria-valuenow="{{ $persen }}"
+                    aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-        </td>
-    </tr>
-    @include('pages.account-list.edit-modal')
-    @include('pages.account-list.delete-modal')
-@endforeach 
+            <small class="text-white">{{ $totalFoto }} / {{ $maxFoto }} foto dikumpulkan</small>
+        </div>
+    </td>
+</tr>
+<style>
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #2e2e3e;
+}
+
+.progress-bar {
+    background-color: #8a2be2;
+    transition: width 0.6s ease;
+}
+</style>
+
+@endforeach

@@ -1,7 +1,7 @@
-            <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer bg-black">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Pelaporan Magang {{ date('Y') }}</span>
+                        <span>Pelaporan Magang {{ date('Y') }}</span>
                     </div>
                 </div>
             </footer>

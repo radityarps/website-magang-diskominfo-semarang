@@ -1,244 +1,217 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-        <!-- Page Heading -->
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body,
+    .container-fluid {
+        font-family: 'Inter', sans-serif;
+        background-color: transparent !important;
+        color: #f1f1f1 !important;
+    }
+
+    .card-modern {
+        background: rgba(255, 255, 255, 0.05); /* transparan ke putih agar blur terlihat */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px); /* penting untuk dukungan Safari/Chrome */
+        border-radius: 20px;
+        overflow: hidden;
+        color: #fff;
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        max-width: 320px;
+        margin: 2rem auto;
+    }
+
+    .card-modern-header {
+        background: rgba(139, 92, 246, 0.7); /* semi-transparan ungu */
+        height: 100px;
+        padding: 1rem;
+        position: relative;
+    }
+
+    .card-modern-tag {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 0.85rem;
+        color: #fff;
+        text-align: right;
+        line-height: 1.2;
+    }
+
+    .card-modern-body {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 180px;
+    }
+
+    .card-modern-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .card-modern-subtitle {
+        font-size: 0.85rem;
+        color: #ccc;
+    }
+
+    .card-modern-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        padding-top: 1rem;
+        font-size: 0.9rem;
+        color: #aaa;
+    }
+
+    .grid-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    /* Video background */
+    .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
+        object-fit: cover;
+        z-index: -2;
+    }
+
+    .overlay-dark {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: -1;
+    }
+
+    .container-fluid {
+        position: relative;
+        z-index: 1;
+    }
+</style>
+
+
+<!-- CONTENT -->
+<div class="container-fluid">
+    @if(Auth::user()->role_id == 1)
+    <div class="grid-cards">
+        <!-- Card 1 -->
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <div class="card-modern-tag">
+                    Admin<br><strong>Total Mahasiswa</strong>
+                </div>
+            </div>
+            <div class="card-modern-body">
+                <div>
+                    <div class="card-modern-title">{{ $totalMahasiswa }}</div>
+                    <div class="card-modern-subtitle">Terdaftar dalam sistem</div>
+                </div>
+                <div class="card-modern-footer">
+                    <span><i class="fas fa-users"></i> Mahasiswa</span>
+                    <span class="note-count">Data Valid</span>
+                </div>
+            </div>
         </div>
 
-        @if(auth()->user()->role_id == 1)
-            <!-- Admin Dashboard -->
-            <!-- Content Row -->
-            <div class="row">
-                <!-- Total Mahasiswa Card -->
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                        Total Mahasiswa Terdaftar</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalMahasiswa }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-users fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sudah Mengumpulkan Card -->
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-success shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Sudah Mengumpulkan (Hari Ini)</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $sudahMengumpulkan }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Belum Mengumpulkan Card -->
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-danger shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                        Belum Mengumpulkan (Hari Ini)</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $belumMengumpulkan }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-times-circle fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Card 2 -->
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <div class="card-modern-tag">
+                    Hari Ini<br><strong>Sudah Mengumpulkan</strong>
                 </div>
             </div>
-
-            <!-- Statistik Mingguan -->
-            <div class="row">
-                <div class="col-xl-12 col-lg-12">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Statistik Pengumpulan 7 Hari Terakhir</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-area">
-                                <canvas id="statistikMingguan"></canvas>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-modern-body">
+                <div>
+                    <div class="card-modern-title">{{ $sudahMengumpulkan }}</div>
+                    <div class="card-modern-subtitle">+{{ $sudahMengumpulkan }} Mahasiswa</div>
+                </div>
+                <div class="card-modern-footer">
+                    <span>Progress</span>
+                    <span class="note-count">Update Harian</span>
                 </div>
             </div>
-        @else
-            <!-- User Dashboard -->
-            <!-- Content Row -->
-            <div class="row">
-                <!-- Panduan Pengumpulan Card -->
-                <div class="col-xl-4 col-md-6 mb-4">
-                    <div class="card border-left-info shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="card-title font-weight-bold text-info text-uppercase mb-3">
-                                Panduan Pengumpulan
-                            </div>
-                            <ul class="pl-4">
-                                <li>Upload maksimal 5 file</li>
-                                <li>Format: PDF, DOCX, JPG, PNG, ZIP</li>
-                                <li>Ukuran maksimal 5MB per file</li>
-                                <li>Pastikan file terupload dengan benar</li>
-                                <li>Deadline pengumpulan pukul 17.00 WIB</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        </div>
 
-                <!-- Status Hari Ini Card -->
-                <div class="col-xl-4 col-md-6 mb-4">
-                    <div class="card border-left-{{ $sudahMengumpulkanHariIni ? 'success' : 'warning' }} shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-{{ $sudahMengumpulkanHariIni ? 'success' : 'warning' }} text-uppercase mb-1">
-                                        Status Hari Ini</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        {{ $sudahMengumpulkanHariIni ? 'Sudah Mengumpulkan' : 'Belum Mengumpulkan' }}
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-{{ $sudahMengumpulkanHariIni ? 'check' : 'exclamation' }}-circle fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Tugas Card -->
-                <div class="col-xl-4 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                        Total Tugas Dikumpulkan</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalTugas }}</div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-tasks fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Card 3 -->
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <div class="card-modern-tag">
+                    Hari Ini<br><strong>Belum Mengumpulkan</strong>
                 </div>
             </div>
-
-            <!-- Statistik User -->
-            <div class="row">
-                <div class="col-xl-12 col-lg-12">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Riwayat Pengumpulan 7 Hari Terakhir</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="chart-area">
-                                <canvas id="statistikUser"></canvas>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-modern-body">
+                <div>
+                    <div class="card-modern-title">{{ $belumMengumpulkan }}</div>
+                    <div class="card-modern-subtitle">Perlu perhatian lebih</div>
+                </div>
+                <div class="card-modern-footer">
+                    <span>Status</span>
+                    <span class="note-count">Segera Follow-up</span>
                 </div>
             </div>
-        @endif
+        </div>
     </div>
+    @else
+    <!-- USER ROLE -->
+    <div class="grid-cards">
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <div class="card-modern-tag">
+                    Status Tugas<br><strong>Hari Ini</strong>
+                </div>
+            </div>
+            <div class="card-modern-body">
+                <div>
+                    <div class="card-modern-title">
+                        @if($sudahMengumpulkanHariIni)
+                            <span style="color: #22c55e;">Sudah Mengumpulkan</span>
+                        @else
+                            <span style="color: #ef4444;">Belum Mengumpulkan</span>
+                        @endif
+                    </div>
+                    <div class="card-modern-subtitle">Tugas harian Anda</div>
+                </div>
+                <div class="card-modern-footer">
+                    <span>Reminder</span>
+                    <span class="note-count">Check Deadline</span>
+                </div>
+            </div>
+        </div>
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        @if(auth()->user()->role_id == 1)
-            // Data untuk grafik admin
-            const statistikData = @json($statistikMingguan);
-            
-            // Siapkan data untuk Chart.js
-            const labels = statistikData.map(item => {
-                const date = new Date(item.tanggal);
-                return date.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' });
-            });
-            const data = statistikData.map(item => item.jumlah);
-
-            // Buat grafik admin
-            const ctx = document.getElementById('statistikMingguan').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Jumlah Mahasiswa Mengumpulkan',
-                        data: data,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
-                    }
-                }
-            });
-        @else
-            // Data untuk grafik user
-            const statistikUser = @json($statistikUser);
-            
-            // Siapkan data untuk Chart.js
-            const labelsUser = statistikUser.map(item => {
-                const date = new Date(item.tanggal);
-                return date.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' });
-            });
-            const dataUser = statistikUser.map(item => item.jumlah);
-
-            // Buat grafik user
-            const ctxUser = document.getElementById('statistikUser').getContext('2d');
-            new Chart(ctxUser, {
-                type: 'bar',
-                data: {
-                    labels: labelsUser,
-                    datasets: [{
-                        label: 'Jumlah Tugas Dikumpulkan',
-                        data: dataUser,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgb(54, 162, 235)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
-                        }
-                    }
-                }
-            });
-        @endif
-    </script>
+        <div class="card-modern">
+            <div class="card-modern-header">
+                <div class="card-modern-tag">
+                    Total<br><strong>Tugas Terkumpul</strong>
+                </div>
+            </div>
+            <div class="card-modern-body">
+                <div>
+                    <div class="card-modern-title">{{ $totalTugas }}</div>
+                    <div class="card-modern-subtitle">Seluruh periode</div>
+                </div>
+                <div class="card-modern-footer">
+                    <span>Rekapan</span>
+                    <span class="note-count">Terupdate</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+</div>
 @endsection

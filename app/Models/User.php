@@ -56,4 +56,16 @@ class User extends Authenticatable
     public function anak_magang(){
         return $this->hasOne(AnakMagang::class);
     }
+
+    public function submissionImages()
+{
+    return $this->hasManyThrough(
+        \App\Models\SubmissionImage::class,
+        \App\Models\Submission::class,
+        'user_id',          // Foreign key on submissions table...
+        'submission_id',    // Foreign key on submission_images table...
+        'id',               // Local key on users table...
+        'id'                // Local key on submissions table...
+    );
+}
 }

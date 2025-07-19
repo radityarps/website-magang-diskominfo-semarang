@@ -8,15 +8,28 @@
             <h1 class="h3 mb-0 text-gray-800">Permintaan Akun</h1>
         </div>
 
-        @if (session('success'))
-            <script>
-                Swal.fire({
-                    title: "Berhasil",
-                    text: "{{ session()->get('success') }}",
-                    icon: "success"
-                });
-            </script>
-        @endif
+@if (session('success'))
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            iconColor: '#10b981',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#1e1e2f',
+            color: '#f9fafb',
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '{{ session()->get('success') }}'
+        });
+    </script>
+@endif
 
         <!-- Content Row -->
         <div class="row">

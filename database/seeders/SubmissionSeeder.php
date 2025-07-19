@@ -15,8 +15,6 @@ class SubmissionSeeder extends Seeder
     {
         Submission::create([
             'user_id' => 1,
-            'title' => 'tugas harian',
-            'content' => 'Tugas harian hari ke-5',
         ]);
     }
 }

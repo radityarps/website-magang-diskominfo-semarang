@@ -1,23 +1,21 @@
-<div class="modal fade" id="confirmationDelete{{ $magang->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form action="/anak_magangs/{{ $magang -> id }}" method="post">
-    @csrf
-    @method('DELETE')
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Konfirmasi Hapus</h1>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+<div class="modal fade" id="confirmationDelete{{ $magang->id }}" tabindex="-1" aria-labelledby="deleteLabel{{ $magang->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="deleteLabel{{ $magang->id }}">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <span>Apakah anda yakin akan menghapus data ini?</span>
+                Apakah kamu yakin ingin menghapus data anak magang <strong>{{ $magang->name }}</strong>?
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-outline-danger">Ya, Hapus!</button>
+            <div class="modal-footer border-0">
+                <form action="{{ route('anak_magangs.destroy', $magang->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </form>
             </div>
-        </div> 
-    </form>
-  </div>
+        </div>
+    </div>
 </div>
