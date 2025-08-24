@@ -441,6 +441,67 @@
             box-shadow: 0 20px 40px rgba(0, 212, 255, 0.3);
         }
 
+        /* Video Gallery Item */
+        .gallery-item.video-item {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-item.video-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item.video-item:hover video {
+            transform: scale(1.1);
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .video-overlay i {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .video-overlay .video-label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .gallery-item.video-item:hover .video-overlay i {
+            transform: scale(1.1);
+            color: var(--accent-cyan);
+        }
+
+        /* Modal Video Styling */
+        #galleryModalVideo {
+            max-width: 100%;
+            max-height: 80vh;
+            width: auto;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            #galleryModalVideo {
+                max-height: 60vh;
+            }
+        }
+
         /* CTA Section */
         .cta-section {
             padding: 100px 0;
@@ -533,6 +594,14 @@
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+
+            .video-overlay i {
+                font-size: 2rem;
+            }
+
+            .video-overlay .video-label {
+                font-size: 0.8rem;
+            }
         }
 
         /* Loading Animation */
@@ -584,6 +653,67 @@
             transition: background 0.3s, color 0.3s, border-color 0.3s;
         }
 
+        /* Music Control Styles */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .music-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .music-btn:hover {
+            background: var(--accent-cyan);
+            color: var(--dark-bg);
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.5);
+        }
+
+        .music-btn.playing {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 25px rgba(0, 212, 255, 0.6);
+            }
+            100% {
+                box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+            }
+        }
+
+        .music-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Custom Override for text-muted to make it brighter */
+        .text-muted {
+            color: #c9d1d9 !important; /* Brighter gray-light color */
+        }
+
+        /* For even more visibility, you can use this alternative */
+        /* .text-muted {
+            color: var(--text-secondary) !important;
+        } */
+
     </style>
 </head>
 <body>
@@ -628,15 +758,22 @@
                         <a class="nav-link" href="#gallery">Galeri</a>
                     </li>
                 </ul>
-                <a href="/register" class="btn btn-futuristic btn-register me-3">
-                    <i class="fas fa-user-plus me-2"></i>Register
-                </a>
-                <a href="/login" class="btn btn-futuristic">
-                    <i class="fas fa-sign-in-alt me-2"></i>Login
-                </a>
             </div>
         </div>
     </nav>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop>
+        <source src="{{ asset('assets/bs.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Music Control Button -->
+    <div class="music-control" id="musicControl">
+        <button id="musicToggle" class="music-btn">
+            <i class="fas fa-music" id="musicIcon"></i>
+        </button>
+    </div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -831,6 +968,15 @@
                 <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" onclick="showGalleryImage('assets/m6.jpeg')">
                     <img src="assets/m6.jpeg" alt="Mentoring Session">
                 </div>
+                <div class="gallery-item video-item" data-bs-toggle="modal" data-bs-target="#galleryModal" onclick="showGalleryVideo('assets/magangbos.mp4')">
+                    <video poster="assets/m1.jpeg" preload="metadata">
+                        <source src="assets/magangbos.mp4" type="video/mp4">
+                    </video>
+                    <div class="video-overlay">
+                        <i class="fas fa-play-circle"></i>
+                        <span class="video-label">Video Magang</span>
+                    </div>
+                </div>
             </div>
             <div class="text-center">
                 <button id="showMoreGallery" class="btn btn-futuristic">
@@ -905,7 +1051,11 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content bg-transparent border-0">
                 <div class="modal-body p-0 text-center">
-                    <img id="galleryModalImage" src="" alt="Gallery Image" class="img-fluid rounded">
+                    <img id="galleryModalImage" src="" alt="Gallery Image" class="img-fluid rounded" style="display: none;">
+                    <video id="galleryModalVideo" controls class="img-fluid rounded" style="display: none;">
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                     <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"></button>
                 </div>
             </div>
@@ -923,6 +1073,50 @@
                 loadingScreen.style.display = 'none';
             }, 1000);
         });
+
+        // Background Music Control
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        // Set initial volume
+        backgroundMusic.volume = 0.3;
+
+        musicToggle.addEventListener('click', function() {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicIcon.className = 'fas fa-music';
+                musicToggle.classList.remove('playing');
+                isPlaying = false;
+            } else {
+                backgroundMusic.play().catch(function(error) {
+                    console.log('Error playing audio:', error);
+                });
+                musicIcon.className = 'fas fa-pause';
+                musicToggle.classList.add('playing');
+                isPlaying = true;
+            }
+        });
+
+        // Auto-play music after user interaction (browser policy compliance)
+        let userInteracted = false;
+        const enableAutoPlay = function() {
+            if (!userInteracted) {
+                userInteracted = true;
+                // Auto-start music after first user interaction
+                setTimeout(() => {
+                    if (!isPlaying) {
+                        musicToggle.click();
+                    }
+                }, 1000);
+            }
+        };
+
+        // Listen for any user interaction to enable auto-play
+        document.addEventListener('click', enableAutoPlay, { once: true });
+        document.addEventListener('keydown', enableAutoPlay, { once: true });
+        document.addEventListener('scroll', enableAutoPlay, { once: true });
 
         // Create particles
         function createParticles() {
@@ -986,8 +1180,39 @@
 
         // Gallery modal function
         function showGalleryImage(src) {
-            document.getElementById('galleryModalImage').src = src;
+            const modalImage = document.getElementById('galleryModalImage');
+            const modalVideo = document.getElementById('galleryModalVideo');
+
+            // Hide video and show image
+            modalVideo.style.display = 'none';
+            modalVideo.pause();
+            modalImage.style.display = 'block';
+            modalImage.src = src;
         }
+
+        // Gallery video modal function
+        function showGalleryVideo(src) {
+            const modalImage = document.getElementById('galleryModalImage');
+            const modalVideo = document.getElementById('galleryModalVideo');
+
+            // Hide image and show video
+            modalImage.style.display = 'none';
+            modalVideo.style.display = 'block';
+            modalVideo.src = src;
+
+            // Auto-play video when modal opens
+            setTimeout(() => {
+                modalVideo.play().catch(function(error) {
+                    console.log('Error playing video:', error);
+                });
+            }, 500);
+        }
+
+        // Pause video when modal is closed
+        document.getElementById('galleryModal').addEventListener('hidden.bs.modal', function () {
+            const modalVideo = document.getElementById('galleryModalVideo');
+            modalVideo.pause();
+        });
 
         // Show more gallery images
         let galleryExpanded = false;
