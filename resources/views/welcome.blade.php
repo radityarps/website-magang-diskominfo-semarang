@@ -344,49 +344,94 @@
             color: var(--text-primary);
         }
 
-        /* Partners Section */
-        .partners-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, rgba(0, 61, 199, 0.1), rgba(0, 102, 255, 0.05));
-        }
+/* Partners Section - Clean Version with Background */
+.partners-section {
+    padding: 100px 0;
+    position: relative;
+}
 
-        .partner-track {
-            display: flex;
-            gap: 3rem;
-            animation: scrollPartners 20s linear infinite;
-            align-items: center;
-        }
+.partner-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 1200px;
+    transition: all 0.3s ease;
+}
 
-        .partner-logo {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 150px;
-            height: 80px;
-            transition: all 0.3s ease;
-        }
+.partner-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--accent-cyan));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
 
-        .partner-logo:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        }
+.partner-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
 
-        .partner-logo img {
-            max-height: 50px;
-            max-width: 120px;
-            object-fit: contain;
-            filter: brightness(1.2);
-        }
+.partner-container:hover::before {
+    transform: scaleX(1);
+}
 
-        @keyframes scrollPartners {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+.partner-logo-clean {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+    height: 140px;
+    padding: 0;
+    margin: 0 30px;
+    background: none;
+    border: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.partner-logo-clean:hover {
+    transform: scale(1.1);
+}
+
+.partner-logo-clean img {
+    max-height: 120px;
+    max-width: 200px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: brightness(1.2) contrast(1.1);
+    transition: all 0.3s ease;
+}
+
+.partner-logo-clean:hover img {
+    filter: brightness(1.4) contrast(1.2);
+    transform: scale(1.05);
+}
+
+/* Update partner track animation untuk smooth infinite scroll */
+.partner-track {
+    display: flex;
+    gap: 0;
+    animation: scrollPartnersSmooth 30s linear infinite;
+    align-items: center;
+    width: fit-content;
+}
+
+@keyframes scrollPartnersSmooth {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
 
         /* Gallery Section */
         .gallery-section {
@@ -919,31 +964,49 @@
         </div>
     </section>
 
-    <!-- Partners Section -->
-    <section id="partners" class="partners-section">
-        <div class="container">
-            <h2 class="section-title">Mitra Kami</h2>
+<!-- Partners Section -->
+<section id="partners" class="partners-section">
+    <div class="container">
+        <h2 class="section-title">Mitra Kami</h2>
+        <div class="partner-container">
             <div style="overflow: hidden; width: 100%;">
                 <div class="partner-track">
-                    <div class="partner-logo">
-                        <img src="assets/udinus.png" alt="UDINUS">
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifudinus.gif" alt="UDINUS">
                     </div>
-                    <div class="partner-logo">
-                        <img src="assets/undip.png" alt="UNDIP">
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifundip.gif" alt="UNDIP">
                     </div>
-                    <div class="partner-logo">
-                        <img src="assets/unissula.png" alt="UNISSULA">
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifunissula.gif" alt="UNISSULA">
                     </div>
-                    <div class="partner-logo">
-                        <img src="assets/univsemarang.png" alt="UNIV SEMARANG">
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifusm.gif" alt="UNIV SEMARANG">
                     </div>
-                    <div class="partner-logo">
-                        <img src="assets/unnes.png" alt="UNNES">
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifunnes.gif" alt="UNNES">
+                    </div>
+                    <!-- Duplicate untuk infinite scroll yang smooth -->
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifudinus.gif" alt="UDINUS">
+                    </div>
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifundip.gif" alt="UNDIP">
+                    </div>
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifunissula.gif" alt="UNISSULA">
+                    </div>
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifusm.gif" alt="UNIV SEMARANG">
+                    </div>
+                    <div class="partner-logo-clean">
+                        <img src="assets/gifunnes.gif" alt="UNNES">
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Gallery Section -->
     <section id="gallery" class="gallery-section">
