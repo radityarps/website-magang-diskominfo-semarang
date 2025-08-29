@@ -759,6 +759,75 @@
             color: var(--text-secondary) !important;
         } */
 
+        /* Hero Animation Styles */
+        .hero-animation {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            z-index: 10;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 4px solid rgba(0, 212, 255, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+            animation: heroAnimationFloat 4s ease-in-out infinite;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-animation:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(0, 212, 255, 0.5);
+            border-color: var(--accent-cyan);
+            border-width: 5px;
+        }
+
+        .hero-animation img {
+            width: calc(100% - 16px);
+            height: calc(100% - 16px);
+            object-fit: contain;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        @keyframes heroAnimationFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+            }
+            50% {
+                transform: translateY(-12px) rotate(2deg);
+                box-shadow: 0 25px 50px rgba(0, 212, 255, 0.4);
+            }
+        }
+
+        /* Responsive untuk mobile */
+        @media (max-width: 768px) {
+            .hero-animation {
+                bottom: 25px;
+                left: 25px;
+                width: 140px;
+                height: 140px;
+                padding: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-animation {
+                bottom: 15px;
+                left: 15px;
+                width: 100px;
+                height: 100px;
+                padding: 4px;
+                border-width: 3px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -853,6 +922,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Hero Animation -->
+        <div class="hero-animation">
+            <img id="heroAnimationImg" src="" alt="Hero Animation">
         </div>
     </section>
 
@@ -1128,6 +1202,43 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Set Hero Animation based on Day of Week
+        function setHeroAnimation() {
+            const heroImg = document.getElementById('heroAnimationImg');
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+            let animationFile = '';
+            let altText = '';
+
+            // Determine which animation to use based on day
+            if (dayOfWeek === 1 || dayOfWeek === 2) { // Monday or Tuesday
+                animationFile = 'hanryanimate_senin.gif';
+                altText = 'Hero Animation Monday-Tuesday';
+            } else if (dayOfWeek === 3 || dayOfWeek === 4) { // Wednesday or Thursday
+                animationFile = 'hanryanimate_rabu.gif';
+                altText = 'Hero Animation Wednesday-Thursday';
+            } else if (dayOfWeek === 5) { // Friday
+                animationFile = 'hanryanimate_jumat.gif';
+                altText = 'Hero Animation Friday';
+            } else { // Saturday or Sunday (fallback to Monday animation)
+                animationFile = 'hanryanimate_senin.gif';
+                altText = 'Hero Animation Weekend';
+            }
+
+            // Set the image source and alt text
+            heroImg.src = `{{ asset('assets/') }}/${animationFile}`;
+            heroImg.alt = altText;
+
+            // Add loading error handler
+            heroImg.onerror = function() {
+                console.log('Failed to load animation:', animationFile);
+                // Fallback to senin animation if current animation fails to load
+                this.src = `{{ asset('assets/hanryanimate_senin.gif') }}`;
+                this.alt = 'Hero Animation Fallback';
+            };
+        }
+
         // Remove loading screen
         window.addEventListener('load', function() {
             const loadingScreen = document.getElementById('loadingScreen');
@@ -1337,6 +1448,7 @@
         // Initialize particles and animations
         createParticles();
         animateCounters();
+        setHeroAnimation(); // Initialize hero animation based on current day
 
         // Add parallax effect to hero section
         window.addEventListener('scroll', function() {
